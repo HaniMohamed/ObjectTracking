@@ -8,6 +8,7 @@ Created on Wed Nov 29 21:51:01 2017
 
 import cv2   #import openCV library for the computer vision
 import numpy as np   #import numpy library for arrays usages
+import serial_com  #import serial_com python file
 
 
 lowerBound = np.array([33,80,40])   #lower bound of the object's color in BGR  -> look at [1]
@@ -48,10 +49,11 @@ while True:
     #Draw Rectangle on the object
     for i in range(len(conts)):
         x, y, w, h = cv2.boundingRect(conts[i]) #get dimensions of the bounding rectangle arround the object
-        cv2.rectangle(img, (x,y), (x+w, y+h), (0,0,255), 2) #draw the rectangle
+        cv2.rectangle(img, (x,y), (x+w, y+h), (0,0,255), 2) #draw the rectangle with green color
         centerX = (x+w) / 2 #center of regtangle in X-axis
         centerY = (y+h) / 2 #center of regtangle in Y-axis
         print(centerX , centerY)    #Print coordinates of the center of the object
+        serial_com.send_data(str(centerX, centerY))  #send center Coordinates to the Arduino
     
     
 
