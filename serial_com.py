@@ -32,7 +32,7 @@ print("connect to", arduino_ports[0])
 def send_data(coordinates):
 	ser = serial.Serial(arduino_ports[0])  # open Arduino serial port
 	print("sending Data to: ", ser.portstr)  # check which port was really used
-	ser.write(coordinates)  # sending the coordinates
+	ser.write(bytes(coordinates, 'UTF-8'))  # sending the coordinates
 	ser.close()    #close port serial
     
 

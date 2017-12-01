@@ -23,7 +23,9 @@ cam = cv2.VideoCapture(1)   #capture video from camera index 1
 while True:
     ret, img = cam.read()   #read the captured video
     img = cv2.resize(img,(340,220)) #resize img window
-    cv2.imshow("Camera", img) #Showing Camera frame
+    height, width = img.shape[:2] #get width and height of the frame
+    #draw the center of the frame
+    cv2.rectangle(img, (int(width/2),int(height/2)), (int(width/2),int(height/2)),(255,0,0), 5)
 
 
     #Convert BGR color to HSV
@@ -50,13 +52,28 @@ while True:
     for i in range(len(conts)):
         x, y, w, h = cv2.boundingRect(conts[i]) #get dimensions of the bounding rectangle arround the object
         cv2.rectangle(img, (x,y), (x+w, y+h), (0,0,255), 2) #draw the rectangle with green color
-        centerX = (x+w) / 2 #center of regtangle in X-axis
-        centerY = (y+h) / 2 #center of regtangle in Y-axis
-        print(centerX , centerY)    #Print coordinates of the center of the object
-        serial_com.send_data(str(centerX, centerY))  #send center Coordinates to the Arduino
-    
-    
+        centerX = (x+(w/2)) #center of regtangle in X-axis
+        centerY = (y+(h/2)) #center of regtangle in Y-axis
+        #draw the center of the rectangle on the frame
+        cv2.rectangle(img, (int(centerX),int(centerY)), (int(centerX),int(centerY)),(0,0,255), 2) 
 
+        print("Center of object: ")
+        print(centerX , centerY)    #Print coordinates of the center of the object
+        
+        originCenterX = int(width / 2) - int(centerX)    #center of object in X-axis with respect to origin
+        originCenterY = int(height / 2) - int(centerY)   #center of object in Y-axis with respect to origin
+        coordintates2origin = str(originCenterX) + " , " + str(originCenterY)
+        print("Center of Object with respect to camera origin: ")
+        print(coordintates2origin)     #Print coordinates of the center of the object with respect to origin
+        
+        
+        #send center Coordinates to the Arduino
+        serial_com.send_data(coordintates2origin)  
+
+    
+    
+    #Showing Camera frame
+    cv2.imshow("Camera", img) 
     #Showing Camera frame in HSV color
     cv2.imshow("HSV", imgHSV)
     #Showing mask frame
