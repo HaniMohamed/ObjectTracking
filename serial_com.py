@@ -19,20 +19,29 @@ arduino_ports = [
 
 #showing warning if there is no Arduino port
 if not arduino_ports:
-    raise IOError("No Arduino found")
+    availableArduino = False
+    warnings.warn("No Arduino port found")
+    if(input("Run anyway?[y/n]") is "y"):
+        run = True
+    else:
+        run = False
+        raise IOError("No Arduino found")
+else:
+    availableArduino = True        
 #showing warning if there are more than one Arduino port
 if len(arduino_ports) > 1:
     warnings.warn('Multiple Arduinos found - using the first one')
 
-
-print("connect to", arduino_ports[0])
+if(availableArduino):
+    print("connect to", arduino_ports[0])
 
 
 #function for sending serial data
 def send_data(coordinates):
-	ser = serial.Serial(arduino_ports[0])  # open Arduino serial port
-	print("sending Data to: ", ser.portstr)  # check which port was really used
-	ser.write(bytes(coordinates, 'UTF-8'))  # sending the coordinates
-	ser.close()    #close port serial
+    if(availableArduino):
+        	ser = serial.Serial(arduino_ports[0])  # open Arduino serial port
+        	print("sending Data to: ", ser.portstr)  # check which port was really used
+        	ser.write(bytes(coordinates, 'UTF-8'))  # sending the coordinates
+        	ser.close()    #close port serial
     
 

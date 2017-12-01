@@ -56,19 +56,17 @@ while True:
         centerY = (y+(h/2)) #center of regtangle in Y-axis
         #draw the center of the rectangle on the frame
         cv2.rectangle(img, (int(centerX),int(centerY)), (int(centerX),int(centerY)),(0,0,255), 2) 
-
-        print("Center of object: ")
-        print(centerX , centerY)    #Print coordinates of the center of the object
-        
+       
         originCenterX = int(width / 2) - int(centerX)    #center of object in X-axis with respect to origin
         originCenterY = int(height / 2) - int(centerY)   #center of object in Y-axis with respect to origin
-        coordintates2origin = str(originCenterX) + " , " + str(originCenterY)
-        print("Center of Object with respect to camera origin: ")
-        print(coordintates2origin)     #Print coordinates of the center of the object with respect to origin
+        coordintates2origin = str(originCenterX) + " , " + str(originCenterY) #convert the coordintates to string
+        #showing coordintates2origin on the camera frame
+        cv2.putText(img, coordintates2origin, (x+w+5,y+h+5), cv2.FONT_HERSHEY_SIMPLEX, 0.2, (0, 0, 255), 1)
         
-        
-        #send center Coordinates to the Arduino
-        serial_com.send_data(coordintates2origin)  
+
+        if (serial_com.availableArduino):
+            #send center Coordinates to the Arduino
+            serial_com.send_data(coordintates2origin)  
 
     
     
