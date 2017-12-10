@@ -11,8 +11,8 @@ import numpy as np   #import numpy library for arrays usages
 import serial_com  #import serial_com python file
 
 
-lowerBound = np.array([33,80,40])   #lower bound of the object's color in BGR  -> look at [1]
-upperBound = np.array([64,255,255])   #upper bound of the object's color in BGR  -> look at [1]
+lowerBound = np.array([33,80,40])   #lower bound of the object's color in HSV  -> look at [1]
+upperBound = np.array([64,255,255])   #upper bound of the object's color in HSV  -> look at [1]
 kernelOpen = np.ones((10, 10))    #Max. array of pixels that cosider as noise pixels  -> look at [2]
 kernelClose = np.ones((20, 20)) #array of pixels which will fill in -> look at [3]
 
@@ -59,14 +59,16 @@ while True:
        
         originCenterX = int(width / 2) - int(centerX)    #center of object in X-axis with respect to origin
         originCenterY = int(height / 2) - int(centerY)   #center of object in Y-axis with respect to origin
-        coordintates2origin = str(originCenterX) + " , " + str(originCenterY) #convert the coordintates to string
+        coordintates2origin = "(" + str(originCenterX) + ", " + str(originCenterY)+")" #convert the coordintates to string
         #showing coordintates2origin on the camera frame
         cv2.putText(img, coordintates2origin, (x+w+5,y+h+5), cv2.FONT_HERSHEY_SIMPLEX, 0.2, (0, 0, 255), 1)
         
-
+        
+        #Check if there is avaliable arduino port
         if (serial_com.availableArduino):
             #send center Coordinates to the Arduino
-            serial_com.send_data(coordintates2origin)  
+            serial_com.send_data(coordintates2origin) 
+
 
     
     
